@@ -36,9 +36,6 @@ VALIDATE $? "Creating elastic search repo"
 yum install elasticsearch -y &>>$LOGFILE
 VALIDATE $? "Installing elastic search"
 
-cp /home/ec2-user/elk/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml &>>$LOGFILE
-VALIDATE $? "Updating the elastci search yaml file"
-
 systemctl enable elasticsearch &>>$LOGFILE
 VALIDATE $? "Enabling elastic search"
 
