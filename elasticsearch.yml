@@ -1,0 +1,11 @@
+# Define the configuration file path
+CONFIG_FILE="elasticsearch.yml"
+
+# Create or overwrite the configuration file with the required settings
+cat <<EOL > $CONFIG_FILE
+http.port: 9200
+network.host: 0.0.0.0
+discovery.type: single-node
+EOL
+
+echo "YAML configuration file created successfully."
