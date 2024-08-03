@@ -7,7 +7,7 @@ CONFIG_FILE="kibana.yml"
 cat <<EOL > $CONFIG_FILE
 server.port: 5601
 server.host: "0.0.0.0"
-elasticsearch.hosts: ["http://elks.neelareddy.store:9200"]
+elasticsearch.hosts: ["http://private.elks.neelareddy.store:9200"]
 EOL
 
 echo "YAML configuration file created successfully."

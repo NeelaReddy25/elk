@@ -4,7 +4,7 @@
 CONFIG_FILE="filebeat.yml"
 
 # Elasticsearch IP address
-ES_IP="elks.neelareddy.store"
+ES_IP="private.elks.neelareddy.store"
 
 # Create or overwrite the configuration file with the required settings
 cat <<EOL > $CONFIG_FILE
