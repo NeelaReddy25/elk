@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# Define paths and parameters
-SOURCE_FILE="create-ec2.sh"
-AWS_REGION="us-east-1"
+# Path to the source file
+SOURCE_FILE="source.sh"
 
 # Ensure the source file exists
 if [ ! -f "$SOURCE_FILE" ]; then
@@ -10,62 +9,28 @@ if [ ! -f "$SOURCE_FILE" ]; then
     exit 1
 fi
 
-# Read instance IDs and store in an array
-INSTANCE_IDS=()
-while IFS= read -r line; do
-    if [[ $line =~ ^i- ]]; then
-        INSTANCE_IDS+=("$line")
-    fi
-done < "$SOURCE_FILE"
+# Source the script to get functions and variables
+source "$SOURCE_FILE"
 
-# Read Route 53 Hosted Zone ID and Record Sets
-HOSTED_ZONE_ID=""
-RECORD_SETS=()
-while IFS= read -r line; do
-    if [[ $line =~ ^Z ]]; then
-        HOSTED_ZONE_ID="$line"
-    elif [[ $line =~ \. ]]; then
-        RECORD_SETS+=("$line")
-    fi
-done < "$SOURCE_FILE"
-
-# Set AWS region
-aws configure set region "$AWS_REGION"
+# Retrieve EC2 instance IDs
+INSTANCE_IDS=$(get_instance_ids)
 
 # Terminate EC2 instances
-if [ ${#INSTANCE_IDS[@]} -gt 0 ]; then
+if [ -n "$INSTANCE_IDS" ]; then
     echo "Terminating AWS instances..."
-    aws ec2 terminate-instances --instance-ids "${INSTANCE_IDS[@]}"
+    aws ec2 terminate-instances --instance-ids $INSTANCE_IDS --region "$AWS_REGION"
     echo "AWS instances termination initiated."
 else
     echo "No EC2 instance IDs found."
 fi
 
+# Retrieve Route 53 records
+ROUTE53_RECORDS=$(get_route53_records)
+
 # Delete Route 53 records
-if [ -n "$HOSTED_ZONE_ID" ] && [ ${#RECORD_SETS[@]} -gt 0 ]; then
-    echo "Deleting records from Route 53 hosted zone $HOSTED_ZONE_ID..."
-    
-    # Create a JSON file for the change batch
-    CHANGE_BATCH_FILE=$(mktemp)
-    echo '{"Changes": [' > "$CHANGE_BATCH_FILE"
-    
-    for record in "${RECORD_SETS[@]}"; do
-        IFS=',' read -r NAME TYPE VALUE <<< "$record"
-        echo "{\"Action\": \"DELETE\", \"ResourceRecordSet\": {\"Name\": \"$NAME\", \"Type\": \"$TYPE\", \"TTL\": 1, \"ResourceRecords\": [{\"Value\": \"$VALUE\"}]}}" >> "$CHANGE_BATCH_FILE"
-        echo ',' >> "$CHANGE_BATCH_FILE"
-    done
-    
-    # Remove trailing comma and close JSON array
-    sed -i '$ s/,$//' "$CHANGE_BATCH_FILE"
-    echo ']}' >> "$CHANGE_BATCH_FILE"
-    
-    # Apply the change batch to Route 53
-    aws route53 change-resource-record-sets --hosted-zone-id "$HOSTED_ZONE_ID" --change-batch file://"$CHANGE_BATCH_FILE"
-    
+if [ -n "$ROUTE53_RECORDS" ]; then
+    delete_route53_records "$ROUTE53_RECORDS"
     echo "Route 53 records deletion initiated."
-    
-    # Clean up
-    rm "$CHANGE_BATCH_FILE"
 else
-    echo "No Route 53 records or hosted zone ID found."
+    echo "No Route 53 records found."
 fi
