@@ -30,9 +30,6 @@ fi
 yum install kibana -y &>>$LOGFILE
 VALIDATE $? "Installing kibana"
 
-cp /home/ec2-user/elk/kibana.yml /etc/kibana/kibana.yml &>>$LOGFILE
-VALIDATE $? "Updating kibana"
-
 systemctl enable kibana &>>$LOGFILE
 VALIDATE $? "Enabling kibana"
 

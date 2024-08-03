@@ -33,8 +33,5 @@ VALIDATE $? "Creating elastic search repo"
 yum install filebeat -y &>>$LOGFILE
 VALIDATE $? "Installing filebeat"
 
-cp /home/ec2-user/elk/filebeat.yml /etc/filebeat/filebeat.yml &>>$LOGFILE
-VALIDATE $? "Updating filebeat yaml"
-
 systemctl start filebeat &>>$LOGFILE
 VALIDATE $? "Starting filebeat"
