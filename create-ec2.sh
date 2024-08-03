@@ -1,5 +1,5 @@
 #!/bin/bash
-
+SOURCE_FILE={
 # Variables
 INSTANCE_NAME="elk"
 PUBLIC_NAME="elk"
@@ -50,7 +50,7 @@ aws route53 change-resource-record-sets --hosted-zone-id $HOSTED_ZONE_ID --chang
     "Changes": [{
         "Action": "UPSERT",
         "ResourceRecordSet": {
-            "Name": "private-'$INSTANCE_NAME'.'$DOMAIN_NAME'",
+            "Name": "private-'$PRIVATE_NAME'.'$DOMAIN_NAME'",
             "Type": "A",
             "TTL": 1,
             "ResourceRecords": [{"Value": "'$PRIVATE_IP'"}]
@@ -59,3 +59,4 @@ aws route53 change-resource-record-sets --hosted-zone-id $HOSTED_ZONE_ID --chang
 }'
 
 echo "DNS records created successfully."
+}
