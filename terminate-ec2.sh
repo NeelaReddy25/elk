@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Path to the source file
-SOURCE_FILE="source.sh"
+SOURCE_FILE="/home/ec2-user/elk/source.sh"
 
 # Ensure the source file exists
 if [ ! -f "$SOURCE_FILE" ]; then
