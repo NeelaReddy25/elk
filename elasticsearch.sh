@@ -39,11 +39,8 @@ VALIDATE $? "Installing elastic search"
 cp /home/ec2-user/elk/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml &>>$LOGFILE
 VALIDATE $? "Updating the elastci search yaml file"
 
-systemctl restart elasticsearch &>>$LOGFILE
-VALIDATE $? "Restarting elastic search"
-
 systemctl enable elasticsearch &>>$LOGFILE
 VALIDATE $? "Enabling elastic search"
 
-
-
+systemctl restart elasticsearch &>>$LOGFILE
+VALIDATE $? "Restarting elastic search"

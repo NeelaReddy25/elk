@@ -33,8 +33,8 @@ VALIDATE $? "Installing kibana"
 cp /home/ec2-user/elk/kibana.yml /etc/kibana/kibana.yml &>>$LOGFILE
 VALIDATE $? "Updating kibana"
 
-systemctl restart kibana &>>$LOGFILE
-VALIDATE $? "Restarting kibana"
-
 systemctl enable kibana &>>$LOGFILE
 VALIDATE $? "Enabling kibana"
+
+systemctl restart kibana &>>$LOGFILE
+VALIDATE $? "Restarting kibana"

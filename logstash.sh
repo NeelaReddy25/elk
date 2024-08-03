@@ -36,8 +36,8 @@ VALIDATE $? "Installing logstash"
 cp /home/ec2-user/elk/logstash.conf /etc/logstash/conf.d/logstash.conf &>>$LOGFILE
 VALIDATE $? "Creating logstash conf"
 
-systemctl restart logstash &>>$LOGFILE
-VALIDATE $? "Restarting logstash"
-
 systemctl enable logstash &>>$LOGFILE
 VALIDATE $? "Enabling logstash"
+
+systemctl restart logstash &>>$LOGFILE
+VALIDATE $? "Restarting logstash"
