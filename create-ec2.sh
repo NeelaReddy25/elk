@@ -1,5 +1,5 @@
 #!/bin/bash
-SOURCE_FILE={
+
 # Variables
 INSTANCE_NAME="elk"
 PUBLIC_NAME="elk"
@@ -59,4 +59,3 @@ aws route53 change-resource-record-sets --hosted-zone-id $HOSTED_ZONE_ID --chang
 }'
 
 echo "DNS records created successfully."
-}
